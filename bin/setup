@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+system('bundle install')
+
+require 'sqlite3'
+
+db = SQLite3::Database.open('cookbook.db')
+db.execute <<-SQL
+  create table if not exists receitas (
+    nome text not null,
+    tipo text not null
+  );
+SQL
+db.close
+
+db.execute <<-SQL, *nome, tipo
+  insert into recipes (nome, tipo) values (?, ?)
+SQL
+
+db.execute2 <<-SQL
+  select * from recipes
+SQL
